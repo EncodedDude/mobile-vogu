@@ -16,12 +16,12 @@ void main(List<String> arguments) {
   }
 }
 
-void searchWikipedia(List<String>? arguments) {
-  final String articleTitle;
+void searchWikipedia(List<String>? arguments) async {
+  final String? articleTitle;
 
   if (arguments == null || arguments.isEmpty) {
     print('Please provide an article title.');
-    articleTitle = stdin.readLineSync() ?? '';
+    articleTitle = stdin.readLineSync();
   } else {
     articleTitle = arguments.join(' ');
   }
