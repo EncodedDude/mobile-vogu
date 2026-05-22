@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:collection';
+import '../command_runner.dart';
+
 enum OptionType { flag, option }
 
 abstract class Argument {
@@ -46,5 +50,71 @@ class Option extends Argument {
     }
 
     return '--$name: $help';
+  }
+}
+
+abstract class Command extends Argument {
+  @override
+  String get name;
+
+  String get description;
+
+  bool get requiresArgument => false;
+
+  late CommandRunner runner;
+
+  @override
+  String? help;
+
+  @override
+  String? defaultValue;
+
+  @override
+  String? valueHelp;
+
+  final List<Option> _options = [];
+
+  UnmodifiableSetView<Option> get options =>
+      UnmodifiableSetView(_options.toSet());
+
+  // A flag is an [Option] that's treated as a boolean.
+  void addFlag(String name, {String? help, String? abbr, String? valueHelp}) {
+    _options.add(
+      Option(
+        name,
+        help: help,
+        abbr: abbr,
+        defaultValue: false,
+        valueHelp: valueHelp,
+        type: OptionType.flag,
+      ),
+    );
+  }
+
+  // An option is an [Option] that takes a value.
+  void addOption(
+    String name, {
+    String? help,
+    String? abbr,
+    String? defaultValue,
+    String? valueHelp,
+  }) {
+    _options.add(
+      Option(
+        name,
+        help: help,
+        abbr: abbr,
+        defaultValue: defaultValue,
+        valueHelp: valueHelp,
+        type: OptionType.option,
+      ),
+    );
+  }
+
+  FutureOr<Object?> run(ArgResults args);
+
+  @override
+  String get usage {
+    return '$name:  $description';
   }
 }
