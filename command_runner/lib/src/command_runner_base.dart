@@ -28,9 +28,9 @@ class CommandRunner {
           print(output.toString());
         }
       }
-    } on Exception catch (exception) {
+    } on Object catch (error) {
       if (onError != null) {
-        onError!(exception);
+        onError!(error);
       } else {
         rethrow;
       }
